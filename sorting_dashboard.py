@@ -45,7 +45,7 @@ class SortingDashboard:
         # YOLO model configuration
         self.model_path = "yolo.pt"
         self.conf_thresh = 0.3  # Lower threshold to detect BAD pieces better
-        self.camera_id = 1  # Start with USB camera (0=laptop built-in, 1=USB)
+        self.camera_id = 0  # Default camera (0=first camera, 1=second camera)
         self.contrast = 1.5
         self.brightness = -30
         
