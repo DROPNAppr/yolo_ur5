@@ -14,6 +14,7 @@ from PIL import Image, ImageTk
 import cv2
 import threading
 import time
+import platform
 from ultralytics import YOLO
 from robot_client import RobotClient
 
@@ -447,12 +448,26 @@ class SortingDashboard:
         return cv2.convertScaleAbs(frame, alpha=self.contrast, beta=self.brightness)
     
     def find_camera(self):
-        """Find available camera - tries USB first, then built-in."""
-        # Try USB camera first (index 1)
-        for i in [1, 0, 2, 3]:
+        """Find available camera - handles both Windows and Linux."""
+        # Detect operating system
+        os_name = platform.system()
+        self.log_message(f"Detected OS: {os_name}")
+        
+        # Set camera backend based on OS
+        if os_name == "Windows":
+            backend = cv2.CAP_DSHOW  # DirectShow for Windows
+            camera_order = [1, 0, 2, 3]  # Try USB first on Windows
+            self.log_message("Using DirectShow backend (Windows)")
+        else:  # Linux, Darwin (macOS), etc.
+            backend = cv2.CAP_V4L2 if os_name == "Linux" else cv2.CAP_ANY
+            camera_order = [0, 1, 2, 3]  # Try index 0 first on Linux
+            self.log_message(f"Using {'V4L2' if os_name == 'Linux' else 'default'} backend (Linux/Unix)")
+        
+        # Try to open camera with detected backend
+        for i in camera_order:
             try:
                 self.log_message(f"Trying camera index {i}...")
-                cap = cv2.VideoCapture(i, cv2.CAP_DSHOW)  # DirectShow for Windows
+                cap = cv2.VideoCapture(i, backend)
                 if cap.isOpened():
                     # Test if we can actually read a frame
                     ret, frame = cap.read()
