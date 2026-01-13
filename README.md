@@ -54,23 +54,44 @@ Before running, configure in `sorting_dashboard.py`:
 
 ## Usage
 
-### Run the application:
-```bash
-./run.sh
-```
+### **IMPORTANT: Always use virtual environment!**
 
-### OR manually:
 ```bash
+# Method 1: Use run script (recommended)
+./run.sh
+
+# Method 2: Manual activation
 source venv/bin/activate
 python3 sorting_dashboard.py
 deactivate
 ```
 
-### OR using run_sorting_system.py:
+### ❌ DO NOT run directly:
 ```bash
-source venv/bin/activate
-python3 run_sorting_system.py
+# This will fail with ImageTk import error:
+python3 sorting_dashboard.py  # WRONG - not using venv!
 ```
+
+## Display Setup (RealVNC)
+
+Since you're using RealVNC:
+
+1. **Enable VNC on Raspberry Pi:**
+   ```bash
+   sudo raspi-config
+   # Interface Options → VNC → Enable
+   ```
+
+2. **Connect via VNC Viewer from your laptop:**
+   - Open VNC Viewer
+   - Connect to: `<raspberry-pi-ip>:5900`
+   - Login with Pi credentials
+
+3. **Run from VNC desktop terminal:**
+   ```bash
+   cd ~/Desktop/yolo_ur5
+   ./run.sh
+   ```
 
 ## Workflow
 
@@ -107,10 +128,22 @@ All pieces processed in numerical ID order.
 
 ## Troubleshooting
 
+### "cannot import name 'ImageTk' from 'PIL'"
+**Solution:** You must use the virtual environment!
+```bash
+source venv/bin/activate  # Always activate first!
+python3 sorting_dashboard.py
+```
+If still failing, re-run setup:
+```bash
+./setup.sh
+```
+
 ### Camera not detected
 - Check USB connection
 - Try different camera index in code (0, 1, 2)
 - Verify camera works: `ls /dev/video*`
+- Check permissions: `sudo usermod -a -G video $USER` (logout/login required)
 
 ### Model not loading
 - Verify `yolo.pt` exists in same directory
@@ -126,12 +159,37 @@ All pieces processed in numerical ID order.
 - Retrain YOLO model with more samples
 - Adjust lighting conditions
 
+### Display issues with VNC
+- Ensure VNC is enabled: `sudo raspi-config`
+- Check VNC service: `sudo systemctl status vncserver-x11-serviced`
+- Restart VNC: `sudo systemctl restart vncserver-x11-serviced`
+
 ## Hardware Requirements
 
 - Raspberry Pi 3/4 (2GB+ RAM recommended)
 - USB Camera
 - Network connection to robot
 - Python 3.7 or higher
+- Display (physical monitor or VNC)
+
+## Quick Reference
+
+### First Time Setup:
+```bash
+cd ~/Desktop/yolo_ur5
+chmod +x setup.sh
+./setup.sh
+```
+
+### Every Time You Run:
+```bash
+./run.sh
+```
+
+### Check Virtual Environment:
+```bash
+which python3  # Should show: .../yolo_ur5/venv/bin/python3
+```
 
 ## Project Structure
 

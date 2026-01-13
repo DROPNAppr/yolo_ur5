@@ -17,6 +17,12 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
+# Update system packages and install dependencies
+echo ""
+echo "Installing system dependencies..."
+sudo apt-get update
+sudo apt-get install -y python3-tk python3-pil python3-pil.imagetk python3-venv
+
 # Create virtual environment
 echo ""
 echo "Creating virtual environment..."
@@ -26,7 +32,6 @@ else
     python3 -m venv venv
     if [ $? -ne 0 ]; then
         echo "ERROR: Failed to create virtual environment!"
-        echo "Please install python3-venv: sudo apt install python3-venv"
         exit 1
     fi
     echo "Virtual environment created successfully!"
@@ -48,6 +53,9 @@ if [ $? -ne 0 ]; then
     deactivate
     exit 1
 fi
+
+# Ensure PIL/Pillow is installed with full support
+pip install --upgrade pillow
 
 deactivate
 
@@ -74,21 +82,24 @@ fi
 # Make scripts executable
 echo ""
 echo "Setting permissions..."
-chmod +x setup.sh
-chmod +x run_sorting_system.py
-chmod +x sorting_dashboard.py
+chmod +x run.sh
 
 echo ""
 echo "=========================================="
 echo "Setup Complete!"
 echo "=========================================="
 echo ""
+echo "✅ System dependencies installed"
+echo "✅ Virtual environment created"
+echo "✅ Python packages installed"
+echo ""
 echo "To run the application:"
+echo "  ./run.sh"
+echo ""
+echo "Or manually:"
 echo "  source venv/bin/activate"
 echo "  python3 sorting_dashboard.py"
-echo ""
-echo "Or use the run script:"
-echo "  ./run.sh"
+echo "  deactivate"
 echo ""
 echo "See README.md for full documentation."
 echo ""
