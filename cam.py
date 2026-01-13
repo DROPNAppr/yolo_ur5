@@ -11,7 +11,7 @@ import threading
 # =========================
 MODEL_PATH = "yolo.pt"   # mets ton modèle dans le même dossier
 CONF_THRESH = 0.6
-CAMERA_ID = 0            # caméra externe USB = 1 (PC interne = 0)
+CAMERA_ID = 1           # caméra externe USB = 1 (PC interne = 0)
 
 # Paramètres d'ajustement luminosité/contraste
 CONTRAST = 1.5       # augmenter le contraste (> 1.0)

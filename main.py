@@ -23,7 +23,7 @@ from robot_client import RobotClient
 # =========================
 # CONFIGURATION
 # =========================
-ROBOT_IP = "192.168.137.1"
+ROBOT_IP = "192.168.137.132"
 IMAGE_PATH = "image.jpg"
 
 GOOD_BIN_NAME = "good bin"
